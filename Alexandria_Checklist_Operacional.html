@@ -27,6 +27,7 @@
     --shadow: 0 1px 2px rgba(27,20,16,.06), 0 8px 24px -12px rgba(27,20,16,.18);
     --surface-dark:#1b1410;
     --page-bg-glow:#3a2a1e;
+    --header-text:#faf6ee;
   }
   :root[data-theme="dark"]{
     --ink:#f2ebe0;
@@ -67,7 +68,7 @@
   /* ---------- HEADER ---------- */
   header.top{
     padding:34px 24px 90px;
-    color:var(--paper);
+    color:var(--header-text);
     position:relative;
     overflow:hidden;
   }
@@ -526,13 +527,14 @@ const DATA = {
       {t:"Confirmar que todos os setores concluíram o próprio checklist de fechamento"},
       {t:"Foto — desperdício consolidado do dia (chapa + banho-maria + descarte)", f:true, peso:10, v:"kg", novo:true},
       {t:"Foto — loja 100% organizada para o fechamento", f:true, novo:true},
+      {t:"Fritadeira desligada da tomada", f:true},
       {t:"Fechamento final assinado pelo responsável do turno"},
     ]},
   ]},
 
   cozinha: { label:"Cozinha", icon:"🍳", groups: [
     { title:"Pré-Preparo", items:[
-      {t:"Descongelamento da carne feito em média 24h antes, em caixas vazadas e sem empilhar pacotes", peso:20, novo:true},
+      {t:"Descongelamento e porcionamento da carne feito em média 24h antes, em caixas vazadas e sem empilhar pacotes", peso:20},
       {t:"Tomate fatiado"},
       {t:"Alface americana higienizada e organizada, sem talos"},
       {t:"Rúcula higienizada e organizada"},
@@ -540,18 +542,25 @@ const DATA = {
       {t:"Picles de pepino e picles jalapeño preparados"},
       {t:"Guacamole preparada conforme manual de produção"},
       {t:"Cebola crispy preparada"},
-      {t:"Bacon frito"},
-      {t:"Calabresa cortada e frita"},
-      {t:"Linguiça Blumenau cortada e frita"},
-      {t:"Cebola caramelizada"},
-      {t:"Repolho roxo caramelizado"},
+      {t:"Bacon frito e bacon farelo preparados"},
+      {t:"Cebola caramelizada com champignon"},
       {t:"Gorgonzola ralado"},
-      {t:"Cogumelos (mushrooms) preparados"},
-      {t:"Curry em pó, molho barbecue, molho Alexandria e Doritos abastecidos"},
+      {t:"Doritos abastecido"},
+      {t:"Molho barbecue abastecido"},
+      {t:"Cream cheese abastecido"},
+      {t:"Geleia de pimenta abastecida"},
+      {t:"Produzir molho Alexandria conforme manual de produção"},
+      {t:"Produzir maionese Alexandria conforme manual de produção"},
+      {t:"Produzir molho tártaro conforme manual de produção"},
+      {t:"Produzir creme de queijo cheddar conforme manual de produção"},
+      {t:"Produzir maionese defumada conforme manual de produção"},
+      {t:"Crispie de couve preparado"},
+      {t:"Costela desfiada"},
+      {t:"Carne suína desfiada"},
     ]},
     { title:"Chapa", items:[
       {t:"Chapa limpa, organizada e ligada na temperatura de 300°C", peso:20, f:true},
-      {t:"Carne separada, refrigerada e abastecida o suficiente para o dia"},
+      {t:"Carne separada, refrigerada e abastecida o suficiente para o dia", f:true},
       {t:"Queijo cheddar separado, refrigerado e abastecido o suficiente para o dia"},
       {t:"Balcão refrigerado limpo e organizado"},
       {t:"Coifa limpa"},
@@ -560,39 +569,41 @@ const DATA = {
       {t:"Hambúrguer vegetariano congelado disponível"},
     ]},
     { title:"Montagem", items:[
-      {t:"Pista quente limpa, organizada, abastecida e na temperatura de 60° a 70°C", peso:20},
+      {t:"Pista quente limpa, organizada, abastecida e na temperatura de 60° a 70°C", peso:20, f:true},
       {t:"Tábuas de polietileno limpas e organizadas"},
       {t:"Bandeirinhas dos lanches abastecidas e organizadas"},
       {t:"Toaster limpa, organizada e na temperatura de 270°C", peso:20},
-      {t:"Mantenedor de proteína limpo e organizado"},
+      {t:"Mantenedor de proteína limpo e organizado", f:true},
       {t:"Utensílios de montagem limpos e organizados"},
-      {t:"Pão organizado e separado, em caixas fechadas"},
+      {t:"Pão organizado e separado, em caixas fechadas", f:true},
+      {t:"Condimentadora abastecida conforme manual de produção", f:true},
     ]},
     { title:"Banho-Maria", items:[
-      {t:"Banho-maria limpo (limpeza diária)", peso:20, novo:true},
-      {t:"Temperatura inicial de 100°C mantida por apenas 5 minutos", peso:20, f:true, novo:true},
-      {t:"Nível de água cobrindo o fundo das cumbucas", novo:true},
-      {t:"Repolho roxo, cebola caramelizada e cogumelos abastecidos, em ordem de montagem", novo:true},
-      {t:"Linguiça Blumenau, calabresa, bacon e queijo gorgonzola abastecidos, em ordem de montagem", novo:true},
-      {t:"Temperatura final ajustada para 60° a 70°C após os 5 minutos iniciais", peso:20, novo:true},
+      {t:"Banho-maria limpo (limpeza diária)", peso:20},
+      {t:"Temperatura inicial de 100°C mantida por apenas 5 minutos", peso:20, f:true},
+      {t:"Nível de água cobrindo o fundo das cumbucas", f:true},
+      {t:"Itens abastecidos para iniciar a operação, conforme manual de produção", f:true},
+      {t:"Temperatura final ajustada para 60° a 70°C após os 5 minutos iniciais", peso:20, f:true},
     ]},
     { title:"Fritadeiras", items:[
-      {t:"Fritadeira limpa, com óleo novo ou filtrado"},
+      {t:"Fritadeira limpa, com óleo novo e filtrado", f:true},
       {t:"Fritadeira ligada na temperatura de 170°C", peso:20},
-      {t:"Timer correto: 3 a 4 minutos para batata; 3 a 6 minutos para frango", peso:20, novo:true},
+      {t:"Timer correto, respeitando a ordem batata → frango → onion rings (3 a 4 min batata; 3 a 6 min frango)", peso:20},
       {t:"Batata frita congelada abastecida o suficiente para o dia"},
+      {t:"Onion rings congelada abastecida o suficiente para o dia"},
       {t:"Peneira, balde e óleo de reposição disponíveis para troca/filtragem"},
       {t:"Frango abastecido o suficiente para o dia e mantido refrigerado após aberto"},
       {t:"Cestinhas de aço e papel manteiga higienizados e preparados"},
     ]},
     { title:"Sobremesas / Burger Doce", items:[
-      {t:"Freezer de sorvetes e açaí limpo e organizado", novo:true},
-      {t:"Frutas sanitizadas, em potes transparentes e etiquetadas com data de manuseio", novo:true},
-      {t:"Nutella, cremes de chocolate/ovomaltine e doce de leite organizados e etiquetados", novo:true},
-      {t:"Taças de milkshake e sorvete limpas e polidas", novo:true, peso:5},
-      {t:"Estoque de canudos, colheres e potes de açaí (300ml/500ml) conferido", novo:true},
-      {t:"Pratos e talheres para Burger Doce disponíveis", novo:true},
-      {t:"Chantilly, calda de chocolate e calda de morango abastecidos e dentro da validade", novo:true},
+      {t:"Freezer de sorvetes e açaí limpo e organizado"},
+      {t:"Frutas sanitizadas, em potes transparentes e etiquetadas com data de manuseio", f:true},
+      {t:"Nutella, cremes de chocolate/ovomaltine e doce de leite organizados e etiquetados"},
+      {t:"Taças de milkshake e sorvete limpas e polidas", peso:5},
+      {t:"Estoque de canudos, colheres e potes de açaí (300ml/500ml) conferido"},
+      {t:"Pratos e talheres para Burger Doce disponíveis"},
+      {t:"Chantilly, calda de chocolate e calda de morango abastecidos e dentro da validade"},
+      {t:"Guloseimas organizadas em condimentadoras conforme manual de produção", f:true},
     ]},
     { title:"Geral / Equipe", items:[
       {t:"Uso de luvas, touca cobrindo cabelo e orelha, higiene pessoal em dia"},
@@ -603,8 +614,10 @@ const DATA = {
       {t:"Checagem de insumos e lista de reposição enviada ao gerente"},
       {t:"Checagem de temperatura das geladeiras e freezers"},
       {t:"Lixeiras esvaziadas e higienizadas"},
-      {t:"Controle de desperdício da chapa e do banho-maria, com quantidade registrada", f:true, v:"kg", novo:true},
-      {t:"Foto — setor de cozinha limpo e organizado (fim de turno)", f:true, novo:true},
+      {t:"Controle de desperdício da chapa e do banho-maria, com quantidade registrada", f:true, v:"kg"},
+      {t:"Controle de desperdício de lanches do turno (nenhum lanche pronto deve ser jogado fora durante a operação)", f:true},
+      {t:"Foto — setor de cozinha limpo e organizado (fim de turno)", f:true},
+      {t:"Desligar fritadeira da tomada", f:true, peso:20},
     ]},
   ]},
 
@@ -668,14 +681,14 @@ const DATA = {
       {t:"Verificar entrega de produtos e armazenar aplicando FIFO (primeiro a entrar, primeiro a sair)"},
       {t:"Chopeira limpa, ligada e funcionando perfeitamente", peso:20},
       {t:"Sanitização das frutas com sanitizer/hipoclorito conforme ANVISA", peso:20},
-      {t:"Geladeiras e freezer do bar limpos e organizados; todas as bebidas do cardápio disponíveis"},
+      {t:"Geladeiras e freezer do bar limpos e organizados; todas as bebidas do cardápio disponíveis", f:true},
       {t:"Bebidas em temperatura ambiente suficientes"},
       {t:"Limão (Taiti e Siciliano) espremido em quantidade suficiente para o período"},
       {t:"Frutas preparadas para drinks; limão e laranja fatiados para os garçons; sucos preparados"},
       {t:"Espuma de gengibre e chantilly abastecidos, dentro da validade"},
       {t:"Balde de gelo abastecido; estoque de canudos, sachês e palitos decorativos"},
       {t:"Engradados organizados e fora da visão do cliente", peso:5},
-      {t:"Balcão do bar limpo, organizado e com antiderrapante"},
+      {t:"Balcão do bar limpo, organizado e com antiderrapante", f:true},
       {t:"Copos limpos e organizados; taças polidas e organizadas na prateleira", peso:5},
       {t:"Todos os produtos etiquetados e dentro da validade"},
       {t:"Utensílios prontos: espremedor, facas, pegadores, medidor, tábua verde"},
@@ -707,10 +720,12 @@ const DATA = {
       {t:"Prancheta e lista de controle de espera disponíveis"},
       {t:"Todas as reservas confirmadas e repassadas à equipe do salão"},
       {t:"Mapa do restaurante atualizado com as reservas"},
+      {t:"Tablets com os nomes das reservas anotados"},
       {t:"Recepcionistas cientes do funcionamento da casa, promoções e formas de pagamento"},
     ]},
     { title:"Abertura — Caixa", items:[
-      {t:"Redes sociais verificadas e avaliações/mensagens pendentes respondidas, em conjunto com a recepção"},
+      {t:"Mensagens de WhatsApp respondidas antes e durante a operação"},
+      {t:"Respostas ao Google Meu Negócio / TripAdvisor em conformidade com o gerente"},
       {t:"Cardápio conferido com cozinha, salão e bar — nenhum produto faltando sem aviso", peso:20},
       {t:"Plataformas de delivery organizadas com as promoções do dia"},
       {t:"Caixa ligado e sistema funcionando adequadamente; som ambiente, internet e VP Link ok"},
@@ -732,7 +747,7 @@ const DATA = {
       {t:"Cancelamentos do dia checados, com justificativa registrada", v:"texto", novo:true},
       {t:"Diferença de caixa apurada, com motivo especificado quando houver", peso:20, v:"R$", novo:true},
       {t:"Relatório de caixa impresso e enviado ao grupo (financeiro, caixa e franqueados)", f:true},
-      {t:"Malote com troco e fundo de caixa lacrado e guardado em segurança", peso:20},
+      {t:"Malote com troco e fundo de caixa lacrado e guardado em segurança", peso:20, f:true},
       {t:"Computador e impressoras desligados; chão do caixa limpo; lixo recolhido", peso:5},
       {t:"Balcão limpo, gavetas organizadas"},
     ]},
@@ -1119,6 +1134,13 @@ document.getElementById('btnPrint').onclick = ()=>{
       <strong>Turno:</strong> ${turno} &nbsp;·&nbsp;
       <strong>Conclusão geral:</strong> ${o.pct}% (${o.done}/${o.total} itens)
     </div>`;
+  const prevTheme = document.documentElement.getAttribute('data-theme') || 'light';
+  document.documentElement.setAttribute('data-theme','light');
+  const restoreTheme = ()=>{
+    document.documentElement.setAttribute('data-theme', prevTheme);
+    window.removeEventListener('afterprint', restoreTheme);
+  };
+  window.addEventListener('afterprint', restoreTheme);
   window.print();
 };
 
