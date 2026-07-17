@@ -114,13 +114,13 @@
     font-family:'JetBrains Mono',monospace;font-weight:700;font-size:16px;color:var(--ink);
   }
   .gaugebar .glabel{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--smoke);}
-  .gaugebar .gtitle{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.5px;}
+  .gaugebar .gtitle{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.5px;color:var(--ink);}
   .gaugebar .gsub{font-size:12px;color:var(--smoke);margin-top:2px;}
   .sector-chips{display:flex;gap:8px;flex-wrap:wrap;margin-left:auto;}
   .chip{
     display:flex;align-items:center;gap:7px;
     padding:7px 11px;border-radius:999px;border:1px solid var(--line);
-    font-size:12px;font-weight:600;cursor:pointer;background:#fff;
+    font-size:12px;font-weight:600;cursor:pointer;background:#fff;color:var(--ink);
     transition:.15s;
   }
   .chip:hover{border-color:var(--ember);}
@@ -207,6 +207,7 @@
     display:inline-flex;align-items:center;gap:6px;
   }
   .foto-btn.attached{border:1px solid var(--ok);background:var(--ok-light);color:var(--ok);}
+  .foto-link{margin-top:8px;font-size:12px;font-weight:600;color:var(--ember-deep);text-decoration:underline;text-underline-offset:2px;}
   .valor-row{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
   .valor-row input, .valor-row textarea{
     font-size:13px;padding:7px 9px;border:1px solid var(--line);border-radius:8px;
@@ -298,6 +299,18 @@
   body.readonly #btnReset{
     pointer-events:none;opacity:.7;
   }
+
+  .locked-notice{
+    background:var(--danger-light);color:var(--danger);border:1px solid #f1c6bd;
+    border-radius:10px;padding:10px 14px;font-size:12.5px;font-weight:600;margin:0 4px 14px;
+  }
+  .sector.locked .check,
+  .sector.locked .foto-btn,
+  .sector.locked .valor-row input,
+  .sector.locked .valor-row textarea,
+  .sector.locked .obs-box textarea{
+    pointer-events:none;opacity:.5;
+  }
 </style>
 </head>
 <body>
@@ -332,17 +345,25 @@
       <div class="meta-controls">
         <label>Unidade
           <select id="unidade">
-            <option>Araucária</option>
-            <option>Paranaguá</option>
-            <option>Seminário</option>
-            <option>Jaraguá do Sul</option>
-            <option>Itajaí</option>
-            <option>Muriaé</option>
-            <option>Florianópolis Continente</option>
-            <option>São José dos Pinhais</option>
-            <option>Diadema</option>
-            <option>Lisboa (Portugal)</option>
-            <option>Outra unidade</option>
+            <option>Itajaí (SC)</option>
+            <option>Balneário (SC)</option>
+            <option>Florianópolis Ingleses (SC)</option>
+            <option>Florianópolis Continente (SC)</option>
+            <option>Palhoça (SC)</option>
+            <option>Jaraguá do Sul (SC)</option>
+            <option>Alto da XV (PR)</option>
+            <option>Santa Felicidade (PR)</option>
+            <option>Alto Boqueirão (PR)</option>
+            <option>São José dos Pinhais (PR)</option>
+            <option>Hauer (PR)</option>
+            <option>Pinhais (PR)</option>
+            <option>Seminário (PR)</option>
+            <option>Fazenda Rio Grande (PR)</option>
+            <option>Araucária (PR)</option>
+            <option>Piraquara (PR)</option>
+            <option>Diadema (SP)</option>
+            <option>Muriaé (MG)</option>
+            <option>Lisboa (PT)</option>
           </select>
         </label>
         <label>Data
@@ -362,8 +383,8 @@
         <button type="button" id="btnLogout">Sair</button>
       </div>
     </div>
-    <div class="heroline">Checklist consolidado <span>sem duplicidade</span>, com peso por criticidade e foto obrigatória.</div>
-    <div class="herosub">Versão revisada a partir das checklists ativas na Central do Franqueado: Salão unificado, Cozinha completa com Banho-Maria e Sobremesas, Caixa com diferença e cancelamentos rastreáveis.</div>
+    <div class="heroline">Checklist Alexandria Burger <span>Franchising</span></div>
+    <div class="herosub">Seguir esse checklist todos os dias, em todos os setores, garante padrão de qualidade, segurança alimentar e a mesma experiência Alexandria Burger para o cliente em qualquer unidade da rede.</div>
   </div>
 
   <div class="wrap">
@@ -383,7 +404,6 @@
   <div class="readonly-banner" id="readonlyBanner" style="display:none">👁️ Modo franqueadora — visualização de todas as unidades, sem edição.</div>
   <div class="legend">
     <span><i style="background:var(--gold)"></i> 📷 Foto obrigatória — precisa anexar antes de concluir</span>
-    <span><i style="background:var(--ember)"></i> Novo — incorporado na revisão consolidada</span>
     <span><i style="background:var(--danger)"></i> Peso 20 — item crítico de segurança alimentar/temperatura</span>
     <span><i style="background:var(--smoke)"></i> Peso 5 — item estético/organização</span>
     <span><i style="background:var(--ok)"></i> Item concluído</span>
@@ -398,6 +418,7 @@
 </footer>
 
 <div class="toast" id="toast"></div>
+<input type="file" id="fotoInput" accept="image/*" capture="environment" style="display:none">
 </div><!-- /#app -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -663,7 +684,7 @@ function initState(){
   Object.keys(DATA).forEach(sec=>{
     DATA[sec].groups.forEach((g,gi)=>{
       g.items.forEach((it,ii)=>{
-        STATE[itemKey(sec,gi,ii)] = {done:false, foto:false, valor:"", obs:""};
+        STATE[itemKey(sec,gi,ii)] = {done:false, foto:false, fotoUrl:"", valor:"", obs:""};
       });
     });
   });
@@ -704,7 +725,7 @@ async function loadSubmissionState(){
     sb.from('checklist_responsaveis').select('*').eq('submission_id', SUBMISSION_ID),
   ]);
   (itemsRes.data||[]).forEach(row=>{
-    STATE[row.item_key] = { done: !!row.done, foto: !!row.foto, valor: row.valor||"", obs: row.obs||"" };
+    STATE[row.item_key] = { done: !!row.done, foto: !!row.foto, fotoUrl: row.foto_url||"", valor: row.valor||"", obs: row.obs||"" };
   });
   (respRes.data||[]).forEach(row=>{
     RESP[row.setor] = { responsavel: row.responsavel||"", horario: row.horario? row.horario.slice(0,5):"" };
@@ -719,7 +740,7 @@ async function persistItem(sec,gi,ii){
   const st = STATE[k];
   const { error } = await sb.from('checklist_items').upsert({
     submission_id: SUBMISSION_ID, item_key: k,
-    done: st.done, foto: st.foto, valor: st.valor, obs: st.obs,
+    done: st.done, foto: st.foto, foto_url: st.fotoUrl || null, valor: st.valor, obs: st.obs,
     updated_at: new Date().toISOString(),
   }, { onConflict: 'submission_id,item_key' });
   if(error) showToast('Erro ao salvar: '+error.message);
@@ -813,18 +834,52 @@ function toggleObs(key){
   box.classList.toggle('show');
 }
 
-function toggleFoto(sec,gi,ii){
-  if(READONLY) return;
-  const k = itemKey(sec,gi,ii);
-  STATE[k].foto = !STATE[k].foto;
-  if(!STATE[k].foto) STATE[k].done = false; // remover foto derruba conclusão
-  persistItem(sec,gi,ii);
-  renderAll();
-  showToast(STATE[k].foto ? "Foto anexada ✔" : "Foto removida");
+function sectorReady(sec){
+  const r = RESP[sec];
+  return !!(r && r.responsavel && r.responsavel.trim() && r.horario);
 }
+
+function requireSectorReady(sec){
+  if(!sectorReady(sec)){
+    showToast("📋 Preencha o responsável e o horário deste setor antes de iniciar o checklist");
+    return false;
+  }
+  return true;
+}
+
+const fotoInputEl = document.getElementById('fotoInput');
+let pendingFoto = null;
+
+function requestFoto(sec,gi,ii){
+  if(READONLY) return;
+  if(!requireSectorReady(sec)) return;
+  pendingFoto = {sec,gi,ii};
+  fotoInputEl.click();
+}
+
+fotoInputEl.onchange = async (e)=>{
+  const file = e.target.files[0];
+  fotoInputEl.value = ''; // permite tirar outra foto depois, mesmo arquivo/nome
+  if(!file || !pendingFoto) return;
+  const {sec,gi,ii} = pendingFoto;
+  pendingFoto = null;
+  const k = itemKey(sec,gi,ii);
+  showToast("Enviando foto...");
+  const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
+  const path = `${SUBMISSION_ID}/${k}-${Date.now()}.${ext}`;
+  const { error: upErr } = await sb.storage.from('checklist-fotos').upload(path, file, { upsert:true });
+  if(upErr){ showToast('Erro ao enviar foto: '+upErr.message); return; }
+  const { data: pub } = sb.storage.from('checklist-fotos').getPublicUrl(path);
+  STATE[k].foto = true;
+  STATE[k].fotoUrl = pub.publicUrl;
+  await persistItem(sec,gi,ii);
+  renderAll();
+  showToast("Foto anexada ✔");
+};
 
 function toggleDone(sec,gi,ii,item){
   if(READONLY) return;
+  if(!requireSectorReady(sec)) return;
   const k = itemKey(sec,gi,ii);
   if(item.f && !STATE[k].foto){
     showToast("📷 Anexe a foto obrigatória antes de concluir este item");
@@ -837,19 +892,22 @@ function toggleDone(sec,gi,ii,item){
 
 function updateValor(sec,gi,ii,val){
   if(READONLY) return;
+  if(!requireSectorReady(sec)) return;
   STATE[itemKey(sec,gi,ii)].valor = val;
   persistItemDebounced(sec,gi,ii);
 }
 function updateObs(sec,gi,ii,val){
   if(READONLY) return;
+  if(!requireSectorReady(sec)) return;
   STATE[itemKey(sec,gi,ii)].obs = val;
   persistItemDebounced(sec,gi,ii);
 }
 
 function renderSector(sec){
   const data = DATA[sec];
+  const locked = !READONLY && !sectorReady(sec);
   const wrap = document.createElement('div');
-  wrap.className = 'sector' + (sec===activeSector?' show':'');
+  wrap.className = 'sector' + (sec===activeSector?' show':'') + (locked?' locked':'');
   wrap.id = 'sec-'+sec;
 
   const s = sectorStats(sec);
@@ -871,7 +929,16 @@ function renderSector(sec){
     <div><label>Horário</label><input type="time" id="hora-${sec}" value="${r.horario}" ${READONLY?'disabled':''}></div>`;
   wrap.appendChild(resp);
   resp.querySelector(`#resp-${sec}`).oninput = (e)=>{ RESP[sec].responsavel = e.target.value; persistResp(sec); };
+  resp.querySelector(`#resp-${sec}`).onblur = ()=> renderAll();
   resp.querySelector(`#hora-${sec}`).oninput = (e)=>{ RESP[sec].horario = e.target.value; persistResp(sec); };
+  resp.querySelector(`#hora-${sec}`).onchange = ()=> renderAll();
+
+  if(locked){
+    const notice = document.createElement('div');
+    notice.className = 'locked-notice';
+    notice.textContent = '⚠️ Preencha o responsável e o horário acima para liberar os itens deste setor.';
+    wrap.appendChild(notice);
+  }
 
   data.groups.forEach((g,gi)=>{
     let gTotal=0, gDone=0;
@@ -892,9 +959,8 @@ function renderSector(sec){
       if(it.f) badges += `<span class="badge foto ${st.foto?'ok':''}">📷 Foto obrigatória${st.foto?' · anexada':''}</span>`;
       if(it.peso === 20) badges += `<span class="badge critico">Peso 20 · crítico</span>`;
       if(it.peso === 5) badges += `<span class="badge leve">Peso 5 · estético</span>`;
-      if(it.novo) badges += `<span class="badge novo">Novo · revisão consolidada</span>`;
 
-      let fotoBtn = it.f ? `<button class="foto-btn ${st.foto?'attached':''}" data-role="foto">${st.foto?'✔ Foto anexada':'📷 Anexar foto'}</button>` : '';
+      let fotoBtn = it.f ? `<button class="foto-btn ${st.foto?'attached':''}" data-role="foto">${st.foto?'🔄 Trocar foto':'📷 Anexar foto'}</button>${st.fotoUrl?` <a href="${st.fotoUrl}" target="_blank" rel="noopener" class="foto-link">ver foto</a>`:''}` : '';
 
       let valorRow = '';
       if(it.v){
@@ -920,7 +986,7 @@ function renderSector(sec){
 
       row.querySelector('[data-role="check"]').onclick = ()=> toggleDone(sec,gi,ii,it);
       const fb = row.querySelector('[data-role="foto"]');
-      if(fb) fb.onclick = ()=> toggleFoto(sec,gi,ii);
+      if(fb) fb.onclick = ()=> requestFoto(sec,gi,ii);
       const vEl = row.querySelector('[data-role="valor"]');
       if(vEl) vEl.oninput = (e)=> updateValor(sec,gi,ii,e.target.value);
       const obsToggle = row.querySelector('[data-role="obstoggle"]');

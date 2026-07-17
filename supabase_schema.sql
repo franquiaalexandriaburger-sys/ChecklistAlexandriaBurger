@@ -3,11 +3,13 @@
 -- Schema do banco (referência do estado final)
 --
 -- Histórico de aplicação neste projeto (nesta ordem):
---   1. supabase_schema.sql              (este arquivo, versão original)
---   2. supabase_schema_update_roles.sql (2 papéis -> 3 papéis)
---   3. supabase_schema_add_setor.sql    (restrição por setor)
+--   1. supabase_schema.sql                     (este arquivo, versão original)
+--   2. supabase_schema_update_roles.sql        (2 papéis -> 3 papéis)
+--   3. supabase_schema_add_setor.sql           (restrição por setor)
+--   4. supabase_schema_fotos_e_unidades.sql    (fotos via Storage + rename Lisboa)
 -- Se for recriar o projeto do zero, pode rodar só este arquivo —
--- ele já reflete o resultado final dos 3 scripts.
+-- ele já reflete o resultado final dos 4 scripts (exceto o bucket de
+-- storage, que precisa ser criado à parte via supabase_schema_fotos_e_unidades.sql).
 -- ============================================================
 
 -- 1) PERFIS (vinculado a auth.users)
@@ -78,6 +80,7 @@ create table public.checklist_items (
   item_key text not null, -- ex: "cozinha_0_3" (prefixo antes do "_" = setor)
   done boolean not null default false,
   foto boolean not null default false,
+  foto_url text, -- URL pública da foto no bucket "checklist-fotos"
   valor text default '',
   obs text default '',
   updated_at timestamptz not null default now(),
@@ -140,7 +143,36 @@ with check (
 );
 
 -- ============================================================
--- 5) EXEMPLO — como cadastrar cada pessoa depois de criar o login em
+-- 5) STORAGE — bucket público para as fotos tiradas pela câmera
+insert into storage.buckets (id, name, public)
+values ('checklist-fotos', 'checklist-fotos', true)
+on conflict (id) do nothing;
+
+create policy "checklist_fotos_read" on storage.objects for select
+using ( bucket_id = 'checklist-fotos' );
+
+create policy "checklist_fotos_insert" on storage.objects for insert
+with check (
+  bucket_id = 'checklist-fotos'
+  and exists (
+    select 1 from public.checklist_submissions s
+    where s.id::text = (storage.foldername(name))[1]
+      and s.unidade = public.current_unidade()
+  )
+);
+
+create policy "checklist_fotos_update" on storage.objects for update
+using (
+  bucket_id = 'checklist-fotos'
+  and exists (
+    select 1 from public.checklist_submissions s
+    where s.id::text = (storage.foldername(name))[1]
+      and s.unidade = public.current_unidade()
+  )
+);
+
+-- ============================================================
+-- 6) EXEMPLO — como cadastrar cada pessoa depois de criar o login em
 -- Authentication > Users > Add user (copie o UUID gerado e cole abaixo).
 -- Rode uma linha destas por pessoa, ajustando os valores:
 --
