@@ -18,20 +18,46 @@
     --ember-light:#fdece1;
     --gold:#d99a3d;
     --ok:#3f8f5f;
-    
+
     --ok-light:#e8f4ec;
     --smoke:#8a7d70;
     --danger:#c1432f;
     --danger-light:#fbe9e6;
     --radius:14px;
     --shadow: 0 1px 2px rgba(27,20,16,.06), 0 8px 24px -12px rgba(27,20,16,.18);
+    --surface-dark:#1b1410;
+    --page-bg-glow:#3a2a1e;
   }
+  :root[data-theme="dark"]{
+    --ink:#f2ebe0;
+    --char:#f2ebe0;
+    --paper:#241c16;
+    --paper-dim:#1a140f;
+    --line:#3c2f24;
+    --ember-light:#3a2416;
+    --ok-light:#183a26;
+    --smoke:#b7a999;
+    --danger-light:#3a1a15;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.7);
+    --surface-dark:#0f0b08;
+    --page-bg-glow:#241b14;
+  }
+  :root[data-theme="dark"] .foto-btn{background:#2e2216;color:#e8b25a;}
+  :root[data-theme="dark"] .badge.foto{background:#2e2216;border-color:#4a3a22;}
+  :root[data-theme="dark"] .item.done .item-text{color:#7fceA0;}
   *{box-sizing:border-box;}
+  #themeToggle{
+    position:fixed;top:16px;right:16px;z-index:100;
+    width:40px;height:40px;border-radius:50%;
+    border:1px solid var(--line);background:var(--paper);color:var(--ink);
+    font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+    box-shadow:var(--shadow);
+  }
   body{
     margin:0;
     background:
-      radial-gradient(1200px 600px at 15% -10%, #3a2a1e 0%, transparent 55%),
-      var(--ink);
+      radial-gradient(1200px 600px at 15% -10%, var(--page-bg-glow) 0%, transparent 55%),
+      var(--surface-dark);
     color:var(--ink);
     font-family:'Inter',-apple-system,Segoe UI,Roboto,sans-serif;
     min-height:100vh;
@@ -120,13 +146,13 @@
   .chip{
     display:flex;align-items:center;gap:7px;
     padding:7px 11px;border-radius:999px;border:1px solid var(--line);
-    font-size:12px;font-weight:600;cursor:pointer;background:#fff;color:var(--ink);
+    font-size:12px;font-weight:600;cursor:pointer;background:var(--paper);color:var(--ink);
     transition:.15s;
   }
   .chip:hover{border-color:var(--ember);}
   .chip .dot{width:8px;height:8px;border-radius:50%;background:var(--line);}
   .chip.done .dot{background:var(--ok);}
-  .chip.active{background:var(--ink);color:#fff;border-color:var(--ink);}
+  .chip.active{background:var(--surface-dark);color:#fff;border-color:var(--surface-dark);}
   .chip.active .dot{background:var(--ember);}
 
   /* ---------- SECTIONS ---------- */
@@ -182,7 +208,7 @@
   .check{
     width:23px;height:23px;border-radius:7px;border:2px solid #cdbfa6;
     flex-shrink:0;margin-top:1px;cursor:pointer;display:flex;align-items:center;justify-content:center;
-    background:#fff;transition:.15s;
+    background:var(--paper);transition:.15s;
   }
   .check.locked{cursor:not-allowed;opacity:.55;}
   .item.done .check{background:var(--ok);border-color:var(--ok);}
@@ -208,10 +234,12 @@
   }
   .foto-btn.attached{border:1px solid var(--ok);background:var(--ok-light);color:var(--ok);}
   .foto-link{margin-top:8px;font-size:12px;font-weight:600;color:var(--ember-deep);text-decoration:underline;text-underline-offset:2px;}
+  .foto-thumb-wrap{margin-top:8px;}
+  .foto-thumb{width:120px;height:120px;object-fit:cover;border-radius:8px;border:1px solid var(--line);display:block;}
   .valor-row{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
   .valor-row input, .valor-row textarea{
     font-size:13px;padding:7px 9px;border:1px solid var(--line);border-radius:8px;
-    font-family:'Inter',sans-serif;background:#fff;
+    font-family:'Inter',sans-serif;background:var(--paper);color:var(--ink);
   }
   .valor-row input{width:140px;}
   .valor-row textarea{flex:1;min-width:180px;resize:vertical;min-height:34px;}
@@ -221,10 +249,10 @@
   }
   .obs-box{display:none;margin-top:7px;}
   .obs-box.show{display:block;}
-  .obs-box textarea{width:100%;font-size:13px;padding:8px;border:1px solid var(--line);border-radius:8px;font-family:'Inter',sans-serif;min-height:44px;}
+  .obs-box textarea{width:100%;font-size:13px;padding:8px;border:1px solid var(--line);border-radius:8px;font-family:'Inter',sans-serif;min-height:44px;background:var(--paper);color:var(--ink);}
 
   footer.actions{
-    position:sticky;bottom:0;background:linear-gradient(0deg,var(--ink) 60%,transparent);
+    position:sticky;bottom:0;background:linear-gradient(0deg,var(--surface-dark) 60%,transparent);
     padding:26px 18px 18px;display:flex;justify-content:center;gap:10px;flex-wrap:wrap;
   }
   .btn{
@@ -235,7 +263,7 @@
   .btn-ghost{background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.18);}
   .toast{
     position:fixed;left:50%;bottom:26px;transform:translateX(-50%);
-    background:var(--ink);color:#fff;padding:10px 18px;border-radius:999px;font-size:13px;
+    background:var(--surface-dark);color:#fff;padding:10px 18px;border-radius:999px;font-size:13px;
     box-shadow:0 10px 30px -10px rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:.25s;z-index:50;
   }
   .toast.show{opacity:1;bottom:34px;}
@@ -252,7 +280,7 @@
   /* ---------- LOGIN GATE ---------- */
   #loginGate{
     min-height:100vh;display:flex;align-items:center;justify-content:center;
-    background:radial-gradient(1200px 600px at 15% -10%, #3a2a1e 0%, transparent 55%), var(--ink);
+    background:radial-gradient(1200px 600px at 15% -10%, var(--page-bg-glow) 0%, transparent 55%), var(--surface-dark);
     padding:24px;
   }
   .login-card{
@@ -265,7 +293,7 @@
   .login-card label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--smoke);margin:0 0 6px;}
   .login-card input{
     width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:9px;
-    font-family:'Inter',sans-serif;font-size:14px;margin-bottom:16px;background:#fff;
+    font-family:'Inter',sans-serif;font-size:14px;margin-bottom:16px;background:var(--paper);color:var(--ink);
   }
   .login-card button{
     width:100%;background:var(--ember);color:#fff;border:none;border-radius:10px;
@@ -317,7 +345,7 @@
   @media print{
     * { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
     body{background:#fff;}
-    #loginGate, .meta-controls, .userbar, .sector-chips, .legend,
+    #loginGate, #themeToggle, .meta-controls, .userbar, .sector-chips, .legend,
     footer.actions, #toast, #fotoInput, .foto-btn, .foto-link,
     .obs-toggle, .readonly-banner, .locked-notice{
       display:none !important;
@@ -339,10 +367,31 @@
     .responsavel-row{background:#f6f2ea;border-color:#ddd;}
     .responsavel-row label, .responsavel-row input{color:var(--ink);}
     .responsavel-row input{background:#fff;border-color:#ccc;}
+    .foto-thumb{width:180px;height:180px;}
   }
 </style>
 </head>
 <body>
+
+<button id="themeToggle" type="button" aria-label="Alternar modo claro/escuro">🌙</button>
+<script>
+  function applyTheme(theme){
+    document.documentElement.setAttribute('data-theme', theme);
+    var btn = document.getElementById('themeToggle');
+    if(btn) btn.textContent = theme === 'dark' ? '☀️' : '🌙';
+    try{ localStorage.setItem('alexandria_theme', theme); }catch(e){}
+  }
+  (function(){
+    var saved = null;
+    try{ saved = localStorage.getItem('alexandria_theme'); }catch(e){}
+    var theme = saved || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    applyTheme(theme);
+  })();
+  document.getElementById('themeToggle').onclick = function(){
+    var current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+    applyTheme(current === 'dark' ? 'light' : 'dark');
+  };
+</script>
 
 <div id="loginGate">
   <div class="login-card">
@@ -465,16 +514,16 @@ const DATA = {
       {t:"Validar uniformes, EPIs e higiene pessoal da equipe em todos os setores"},
       {t:"Verificar insumos críticos de Cozinha, Salão, Bar e Caixa com os responsáveis"},
       {t:"Repassar promoções, campanhas e alterações de cardápio do dia à equipe"},
-      {t:"Verificar redes sociais e responder avaliações/mensagens pendentes"},
-      {t:"Conferir mapa de reservas e ocorrências registradas no turno anterior"},
+      {t:"Conferir mapa de reservas (no Trello) e verificar se os tablets estão preparados"},
       {t:"Foto — loja pronta para receber clientes (fachada, salão e pista)", f:true, novo:true},
-      {t:"Foto — banho-maria e pista de montagem em ordem de sequência (padrão de rodízio)", f:true, novo:true},
+      {t:"Analisar se a cozinha está preparada com produção diária suficiente"},
     ]},
     { title:"Durante o turno", items:[
       {t:"Acompanhar metas de vendas do dia"},
       {t:"Analisar estoque e disparar lista de reposição/compras"},
       {t:"Registrar ocorrências no grupo de supervisão da rede"},
       {t:"Acompanhar abertura de caixa e conferência do fundo de troco"},
+      {t:"Foto — desperdício de lanches do turno (nenhum lanche pronto pode ser descartado durante a operação)", f:true},
     ]},
     { title:"Fechamento — Visão Geral da Loja", items:[
       {t:"Conferir fechamento de caixa e relatório enviado ao grupo (financeiro/franqueados)"},
@@ -665,7 +714,7 @@ const DATA = {
       {t:"Recepcionistas cientes do funcionamento da casa, promoções e formas de pagamento"},
     ]},
     { title:"Abertura — Caixa", items:[
-      {t:"Mensagens nas redes sociais verificadas em conjunto com a recepção"},
+      {t:"Redes sociais verificadas e avaliações/mensagens pendentes respondidas, em conjunto com a recepção"},
       {t:"Cardápio conferido com cozinha, salão e bar — nenhum produto faltando sem aviso", peso:20},
       {t:"Plataformas de delivery organizadas com as promoções do dia"},
       {t:"Caixa ligado e sistema funcionando adequadamente; som ambiente, internet e VP Link ok"},
@@ -991,7 +1040,7 @@ function renderSector(sec){
       if(it.peso === 20) badges += `<span class="badge critico">Peso 20 · crítico</span>`;
       if(it.peso === 5) badges += `<span class="badge leve">Peso 5 · estético</span>`;
 
-      let fotoBtn = it.f ? `<button class="foto-btn ${st.foto?'attached':''}" data-role="foto">${st.foto?'🔄 Trocar foto':'📷 Anexar foto'}</button>${st.fotoUrl?` <a href="${st.fotoUrl}" target="_blank" rel="noopener" class="foto-link">ver foto</a>`:''}` : '';
+      let fotoBtn = it.f ? `<button class="foto-btn ${st.foto?'attached':''}" data-role="foto">${st.foto?'🔄 Trocar foto':'📷 Anexar foto'}</button>${st.fotoUrl?` <a href="${st.fotoUrl}" target="_blank" rel="noopener" class="foto-link">ver foto</a><div class="foto-thumb-wrap"><img class="foto-thumb" src="${st.fotoUrl}" alt="Foto anexada"></div>`:''}` : '';
 
       let valorRow = '';
       if(it.v){
