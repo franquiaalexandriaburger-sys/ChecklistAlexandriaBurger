@@ -80,13 +80,9 @@
   .brandrow{display:flex;align-items:center;justify-content:space-between;gap:16px;position:relative;z-index:2;flex-wrap:wrap;}
   .brand{display:flex;align-items:center;gap:12px;}
   .logo{
-    width:46px;height:46px;border-radius:50%;
-    background:linear-gradient(145deg,var(--ember),var(--ember-deep));
-    display:flex;align-items:center;justify-content:center;
-    font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;color:#fff;
-    box-shadow:0 0 0 3px rgba(255,255,255,.14), 0 6px 18px -4px rgba(232,96,28,.7);
-    flex-shrink:0;
+    width:46px;height:46px;flex-shrink:0;
   }
+  .logo img{width:100%;height:100%;object-fit:contain;display:block;}
   .brand h1{
     font-family:'Bebas Neue',sans-serif;
     font-size:26px;letter-spacing:1.5px;margin:0;line-height:1;
@@ -395,7 +391,7 @@
 
 <div id="loginGate">
   <div class="login-card">
-    <div class="logo" style="width:52px;height:52px;font-size:24px;">A</div>
+    <div class="logo" style="width:52px;height:52px;"><img src="logo.png" alt="Alexandria Burger"></div>
     <h1>ALEXANDRIA BURGER</h1>
     <p class="sub">Checklist Operacional · acesso restrito</p>
     <form id="loginForm">
@@ -414,7 +410,7 @@
   <div class="wrap">
     <div class="brandrow">
       <div class="brand">
-        <div class="logo">A</div>
+        <div class="logo"><img src="logo.png" alt="Alexandria Burger"></div>
         <div>
           <h1>ALEXANDRIA BURGER</h1>
           <p>Checklist Operacional · Rede de Franquias</p>
