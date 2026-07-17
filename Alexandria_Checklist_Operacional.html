@@ -311,6 +311,35 @@
   .sector.locked .obs-box textarea{
     pointer-events:none;opacity:.5;
   }
+
+  /* ---------- IMPRESSÃO / RELATÓRIO PDF ---------- */
+  .print-only{display:none;}
+  @media print{
+    * { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    body{background:#fff;}
+    #loginGate, .meta-controls, .userbar, .sector-chips, .legend,
+    footer.actions, #toast, #fotoInput, .foto-btn, .foto-link,
+    .obs-toggle, .readonly-banner, .locked-notice{
+      display:none !important;
+    }
+    header.top{padding:0;color:var(--ink);background:none;}
+    header.top::after{display:none;}
+    .brandrow{align-items:center;}
+    .heroline, .herosub{display:none;}
+    .gaugebar{box-shadow:none;border:1px solid #ddd;margin:12px 0;}
+    main{padding-top:16px;}
+    .wrap{max-width:100%;}
+    .print-only{display:block;margin:0 4px 16px;}
+    .sector{display:block !important;break-before:page;}
+    #sectors .sector:first-child{break-before:auto;}
+    .sector-head h2{color:var(--ink);}
+    .group{box-shadow:none;border:1px solid #ddd;break-inside:avoid;}
+    .item{break-inside:avoid;}
+    .obs-box{display:block !important;}
+    .responsavel-row{background:#f6f2ea;border-color:#ddd;}
+    .responsavel-row label, .responsavel-row input{color:var(--ink);}
+    .responsavel-row input{background:#fff;border-color:#ccc;}
+  }
 </style>
 </head>
 <body>
@@ -401,6 +430,7 @@
 </header>
 
 <main class="wrap">
+  <div id="printHeader" class="print-only"></div>
   <div class="readonly-banner" id="readonlyBanner" style="display:none">👁️ Modo franqueadora — visualização de todas as unidades, sem edição.</div>
   <div class="legend">
     <span><i style="background:var(--gold)"></i> 📷 Foto obrigatória — precisa anexar antes de concluir</span>
@@ -872,9 +902,10 @@ fotoInputEl.onchange = async (e)=>{
   const { data: pub } = sb.storage.from('checklist-fotos').getPublicUrl(path);
   STATE[k].foto = true;
   STATE[k].fotoUrl = pub.publicUrl;
+  STATE[k].done = true; // item com foto obrigatória conclui automaticamente ao anexar
   await persistItem(sec,gi,ii);
   renderAll();
-  showToast("Foto anexada ✔");
+  showToast("Foto anexada — item concluído ✔");
 };
 
 function toggleDone(sec,gi,ii,item){
@@ -1030,7 +1061,21 @@ document.getElementById('btnReset').onclick = async ()=>{
     showToast("Checklist reiniciado");
   }
 };
-document.getElementById('btnPrint').onclick = ()=>{ window.print(); };
+document.getElementById('btnPrint').onclick = ()=>{
+  const unidade = document.getElementById('unidade').value;
+  const data = document.getElementById('data').value;
+  const turno = document.getElementById('turno').value;
+  const o = overallStats();
+  document.getElementById('printHeader').innerHTML = `
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:.5px;">ALEXANDRIA BURGER — Checklist Operacional</div>
+    <div style="font-size:12.5px;color:#444;margin-top:6px;line-height:1.6;">
+      <strong>Unidade:</strong> ${unidade} &nbsp;·&nbsp;
+      <strong>Data:</strong> ${data} &nbsp;·&nbsp;
+      <strong>Turno:</strong> ${turno} &nbsp;·&nbsp;
+      <strong>Conclusão geral:</strong> ${o.pct}% (${o.done}/${o.total} itens)
+    </div>`;
+  window.print();
+};
 
 document.getElementById('unidade').onchange = ()=> loadSubmissionState();
 document.getElementById('data').onchange = ()=> loadSubmissionState();
@@ -1063,7 +1108,15 @@ async function bootApp(){
 
   const unidadeSel = document.getElementById('unidade');
   if(!READONLY && PROFILE.unidade){
-    if([...unidadeSel.options].some(o=>o.value===PROFILE.unidade)) unidadeSel.value = PROFILE.unidade;
+    const match = [...unidadeSel.options].some(o=>o.value===PROFILE.unidade);
+    if(!match){
+      loginError.textContent = `Sua unidade cadastrada ("${PROFILE.unidade}") não existe mais na lista de unidades. Fale com a franqueadora para corrigir seu cadastro.`;
+      await sb.auth.signOut();
+      loginGate.style.display = '';
+      appEl.style.display = 'none';
+      return;
+    }
+    unidadeSel.value = PROFILE.unidade;
     unidadeSel.disabled = true;
   }
 
